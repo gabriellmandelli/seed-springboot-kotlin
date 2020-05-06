@@ -1,0 +1,23 @@
+
+server:
+  port: 8080
+  servlet:
+    context-path: /seed-api
+
+spring:
+  datasource:
+    url: jdbc:postgresql://motty.db.elephantsql.com:5432/yhjrhdgf
+    username: yhjrhdgf
+    password: OZFMpH85CmRu0gCJUB4TFTVz8T8mfQxA
+
+  jpa:
+    show-sql: true
+    open-in-view=true: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  thymeleaf:
+    cache: false
