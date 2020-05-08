@@ -21,3 +21,8 @@ spring:
 
   thymeleaf:
     cache: false
+
+security:
+  jwt:
+    expiration-time: 30
+    signing-key: YSBsZW1icmUgw6kgYnJhbmNh

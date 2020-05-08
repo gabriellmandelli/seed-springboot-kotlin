@@ -1,0 +1,28 @@
+
+server:
+  port: 8080
+  servlet:
+    context-path: /seed-api
+
+spring:
+  datasource:
+    url: jdbc:postgresql://motty.db.elephantsql.com:5432/wwiwsezi
+    username: wwiwsezi
+    password: zG4Se4nqfXODgHpBRDC8sU5p7JvFnEi8
+
+  jpa:
+    show-sql: true
+    open-in-view=true: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  thymeleaf:
+    cache: false
+
+security:
+  jwt:
+    expiration-time: 30
+    signing-key: YSBsZW1icmUgw6kgYnJhbmNh

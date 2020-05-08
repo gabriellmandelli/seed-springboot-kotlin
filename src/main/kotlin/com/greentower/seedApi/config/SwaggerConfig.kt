@@ -2,6 +2,7 @@ package com.greentower.seedApi.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.web.bind.annotation.RestController
 import springfox.documentation.builders.ApiInfoBuilder
 import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
@@ -20,6 +21,7 @@ class SwaggerConfig {
         return Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
                 .select()
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController::class.java))
                 .apis(RequestHandlerSelectors.basePackage("com.greentower.seedApi.rest.controller"))
                 .paths(PathSelectors.any())
                 .build()
@@ -31,7 +33,7 @@ class SwaggerConfig {
     private fun apiInfo(): ApiInfo {
         return ApiInfoBuilder()
                 .title("Seed Springboot kotlin")
-                .description("Seed for start new projects")
+                .description("Project is a seed to start new api.")
                 .version("0.0.1")
                 .contact(contact())
                 .build()
@@ -51,6 +53,9 @@ class SwaggerConfig {
     }
 
     private fun defaultAuth():List<SecurityReference>{
-        return arrayListOf(SecurityReference("JWT", arrayOf(AuthorizationScope("global", "acessEverything"))))
+        val authorizationScope = AuthorizationScope("global", "acessEverything")
+        val scopes = arrayOf(authorizationScope)
+        val reference = SecurityReference("JWT", scopes)
+        return arrayListOf(reference)
     }
 }

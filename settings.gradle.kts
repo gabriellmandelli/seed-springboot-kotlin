@@ -1,1 +1,1 @@
-rootProject.name = "seedApi"
+rootProject.name = "seed-springboot-kotlin"
