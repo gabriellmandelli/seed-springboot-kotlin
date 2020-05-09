@@ -1,4 +1,4 @@
-package com.greentower.seedApi.util
+package com.greentower.seedApi.util.generic
 
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
@@ -8,7 +8,7 @@ import javax.persistence.*
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
-abstract class BaseEntity {
+abstract class GenericEntity: GenericClass {
 
     @Id
     @Column(name = "id")

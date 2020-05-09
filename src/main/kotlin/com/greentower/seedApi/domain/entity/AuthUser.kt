@@ -2,7 +2,7 @@ package com.greentower.seedApi.domain.entity
 
 import com.greentower.seedApi.domain.enum.UserRole
 import com.greentower.seedApi.domain.enum.UserStatus
-import com.greentower.seedApi.util.BaseEntity
+import com.greentower.seedApi.util.generic.GenericEntity
 import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
@@ -11,7 +11,7 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "auth_user")
-class AuthUser : BaseEntity() {
+class AuthUser : GenericEntity() {
 
     @Size(min = 1, max = 255, message = "Field name need be 1 between 255 carcters")
     @NotEmpty(message = "Field name is not empty")
