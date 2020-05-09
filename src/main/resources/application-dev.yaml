@@ -6,13 +6,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://motty.db.elephantsql.com:5432/wwiwsezi
-    username: wwiwsezi
-    password: zG4Se4nqfXODgHpBRDC8sU5p7JvFnEi8
+    url: jdbc:postgresql://ec2-34-234-228-127.compute-1.amazonaws.com:5432/defechh51m1rg9
+    username: ncswoykyvpmvji
+    password: c2ff5d43d69c6f40cc7638298e40df4c69fce72fb0a3454a659013569754b9dc
 
   jpa:
     show-sql: true
-    open-in-view=true: true
+    open-in-view: true
     hibernate:
       ddl-auto: update
     properties:
@@ -24,5 +24,5 @@ spring:
 
 security:
   jwt:
-    expiration-time: 30
+    expiration-time-minutes: 30
     signing-key: YSBsZW1icmUgw6kgYnJhbmNh
