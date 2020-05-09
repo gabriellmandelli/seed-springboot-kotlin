@@ -1,6 +1,5 @@
 package com.greentower.seedApi.user.service.impl
 
-import com.greentower.seedApi.infrastructure.generic.GenericRepository
 import com.greentower.seedApi.infrastructure.generic.GenericServiceImpl
 import com.greentower.seedApi.user.domain.entity.AuthUser
 import com.greentower.seedApi.user.domain.enum.UserRole
