@@ -25,4 +25,6 @@ interface AuthUserService : UserDetailsService, GenericService<AuthUser> {
     fun findByUserName(userName: String) : AuthUser
 
     fun authenticate(authUser: AuthUser) : UserDetails
+
+    fun updatePassword(username: String, oldPassword : String, newPassword: String): AuthUser
 }

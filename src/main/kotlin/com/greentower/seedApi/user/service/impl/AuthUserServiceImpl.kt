@@ -44,6 +44,20 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
         return repository.save(entity)
     }
 
+    override fun updatePassword(username: String, oldPassword : String, newPassword: String): AuthUser{
+
+        val authUserFromDBorder = findByUserName(username)
+
+        if (passwordEncoder.matches(authUserFromDBorder.password, passwordEncoder.encode(oldPassword))){
+
+            authUserFromDBorder.password = passwordEncoder.encode(newPassword)
+
+            return repository.save(authUserFromDBorder)
+        }else{
+            throw  RuntimeException("Password not matches")
+        }
+    }
+
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(userName: String): UserDetails {
 
@@ -70,12 +84,10 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
                 .orElseThrow{AuthUserNotFoundException("User not found")}
     }
 
-
     override fun authenticate(authUser: AuthUser): UserDetails {
         val userDetails = loadUserByUsername(authUser.username)
-        val isValidPassword = passwordEncoder.matches(authUser.password, userDetails.password)
 
-        if (isValidPassword){
+        if (passwordEncoder.matches(authUser.password, userDetails.password)){
             return userDetails
         }else{
             throw  RuntimeException("Password not matches")
