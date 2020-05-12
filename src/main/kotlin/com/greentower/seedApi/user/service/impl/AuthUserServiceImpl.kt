@@ -25,6 +25,11 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
     @Autowired
     lateinit var passwordEncoder : PasswordEncoder
 
+    @Autowired
+    fun setService(){
+        repository = repositoryAuthUser
+    }
+
     override fun save(entity: AuthUser): AuthUser {
         entity.password = passwordEncoder.encode(entity.password)
         return repository.save(entity)

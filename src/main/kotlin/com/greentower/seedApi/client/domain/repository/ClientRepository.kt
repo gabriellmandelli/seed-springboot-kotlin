@@ -5,5 +5,4 @@ import com.greentower.seedApi.infrastructure.generic.GenericRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ClientRepository : GenericRepository<Client> {
-}
+interface ClientRepository : GenericRepository<Client>

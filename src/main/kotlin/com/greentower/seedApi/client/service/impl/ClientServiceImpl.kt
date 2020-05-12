@@ -8,6 +8,4 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class ClientServiceImpl : ClientService, GenericServiceImpl<Client>() {
-
-}
+class ClientServiceImpl : ClientService, GenericServiceImpl<Client>()

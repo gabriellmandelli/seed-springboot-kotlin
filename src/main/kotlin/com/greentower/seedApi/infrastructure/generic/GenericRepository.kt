@@ -5,5 +5,4 @@ import org.springframework.data.repository.NoRepositoryBean
 import java.util.*
 
 @NoRepositoryBean
-interface GenericRepository<T : GenericClass> : JpaRepository<T, UUID>{
-}
+interface GenericRepository<T : GenericClass> : JpaRepository<T, UUID>

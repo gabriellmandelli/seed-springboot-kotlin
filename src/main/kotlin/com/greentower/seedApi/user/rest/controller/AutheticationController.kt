@@ -1,9 +1,9 @@
 package com.greentower.seedApi.user.rest.controller
 
+import com.greentower.seedApi.infrastructure.security.jwt.JwtTokenProvider
 import com.greentower.seedApi.user.domain.entity.AuthUser
 import com.greentower.seedApi.user.rest.dto.AuthUserCredentialDTO
 import com.greentower.seedApi.user.rest.dto.AuthUserTokenDTO
-import com.greentower.seedApi.infrastructure.security.jwt.JwtTokenProvider
 import com.greentower.seedApi.user.service.AuthUserService
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.userdetails.UsernameNotFoundException

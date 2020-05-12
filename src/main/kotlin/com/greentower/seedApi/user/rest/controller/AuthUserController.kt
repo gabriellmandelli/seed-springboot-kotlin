@@ -13,13 +13,16 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/user")
-class AuthUserController(private var serviceAuthUser : AuthUserService): GenericController<AuthUser>() {
+class AuthUserController: GenericController<AuthUser>() {
 
     override var messageNotFound = "User not found"
 
     @Autowired
-    fun setService(service: AuthUserService){
-        this.service = service
+    lateinit var serviceAuthUser: AuthUserService
+
+    @Autowired
+    fun setService(){
+        this.service = serviceAuthUser
     }
 
     @PutMapping("/password")
