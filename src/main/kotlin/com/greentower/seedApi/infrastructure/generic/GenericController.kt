@@ -14,37 +14,37 @@ abstract class GenericController<T: GenericClass> {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun save(@Validated @RequestBody entity : T) : ResponseEntity<T> {
+    open fun save(@Validated @RequestBody entity : T) : ResponseEntity<T> {
         return ResponseEntity.ok(service.save(entity))
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun update(@PathVariable("id") id : UUID, @Validated @RequestBody entity : T) : ResponseEntity<T> {
+    open fun update(@PathVariable("id") id : UUID, @Validated @RequestBody entity : T) : ResponseEntity<T> {
         return ResponseEntity.ok(service.update(entity, id))
     }
 
     @GetMapping("{id}")
-    fun findById(@PathVariable("id") id : UUID) : ResponseEntity<T> {
+    open fun findById(@PathVariable("id") id : UUID) : ResponseEntity<T> {
         return service.findById(id)
                 .map { entity -> ResponseEntity.ok(entity) }
                 .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, messageNotFound) }
     }
 
     @GetMapping
-    fun findAll() : List<T>{
+    open fun findAll() : List<T>{
         return service.findAll()
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
-    fun deleteById(@PathVariable("id") id : UUID){
+    open fun deleteById(@PathVariable("id") id : UUID){
         return service.deleteById(id)
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
-    fun deleteAll(){
+    open fun deleteAll(){
         return service.deleteAll()
     }
 }
