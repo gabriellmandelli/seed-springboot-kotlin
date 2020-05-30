@@ -32,7 +32,7 @@ dependencies {
 	}
 
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
-
+	implementation("org.flywaydb:flyway-core")
 	implementation("org.postgresql:postgresql")
 
 	implementation("io.springfox:springfox-swagger2:2.9.2")
