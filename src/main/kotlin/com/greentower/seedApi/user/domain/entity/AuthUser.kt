@@ -1,8 +1,8 @@
 package com.greentower.seedApi.user.domain.entity
 
+import com.greentower.seedApi.infrastructure.generic.GenericEntity
 import com.greentower.seedApi.user.domain.enum.UserRole
 import com.greentower.seedApi.user.domain.enum.UserStatus
-import com.greentower.seedApi.infrastructure.generic.GenericEntity
 import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
@@ -46,5 +46,5 @@ class AuthUser : GenericEntity() {
 
     @Column(name = "roles")
     @Enumerated(value = EnumType.STRING)
-    var role : UserRole = UserRole.ADMIN
+    var role : UserRole = UserRole.USER
 }

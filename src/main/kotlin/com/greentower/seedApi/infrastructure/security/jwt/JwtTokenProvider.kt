@@ -19,6 +19,8 @@ class JwtTokenProvider {
     @Value("\${security.jwt.signing-key}")
     var signingKey = ""
 
+    val TOKEN_PREFIX = "Bearer "
+
     fun generateTokenByUser( userDetails: UserDetails) : String {
 
         val expirationDate : Date = Date.from(LocalDateTime.now().plusMinutes(expirationTime.toLong()).atZone(ZoneId.systemDefault()).toInstant())
@@ -31,7 +33,7 @@ class JwtTokenProvider {
                 .compact()
     }
 
-    fun getClaimsFromToken(token: String): Claims {
+    fun getAllClaimsFromToken(token: String): Claims {
         return Jwts
                 .parser()
                 .setSigningKey(signingKey)
@@ -41,18 +43,13 @@ class JwtTokenProvider {
 
     fun isValidToken(token : String) : Boolean {
         return try {
-            !LocalDateTime.now().isAfter(getClaimsFromToken(token).expiration.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+            !LocalDateTime.now().isAfter(getAllClaimsFromToken(token).expiration.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
         }catch (exception : Exception){
             false
         }
     }
 
-    fun getUseLoginFromToken(token: String) : String {
-        return getClaimsFromToken(token).subject
+    fun getUsernameFromToken(token: String) : String {
+        return getAllClaimsFromToken(token).subject
     }
-
-    fun getTypeAcessToken() : String {
-        return "Bearer"
-    }
-
 }

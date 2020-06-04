@@ -26,12 +26,12 @@ class AutheticationController(private var serviceAuthUser : AuthUserService, pri
             }
 
             val userDetails = serviceAuthUser.authenticate(authUser)
-            val token = jwtTokenProvider.generateTokenByUser(userDetails)
+            val returnToken = jwtTokenProvider.generateTokenByUser(userDetails)
             val user = serviceAuthUser.findByUserName(authUser.username)
 
             AuthUserTokenDTO().apply {
                 this.username = userDetails.username
-                this.token = "${jwtTokenProvider.getTypeAcessToken()} $token"
+                this.token = jwtTokenProvider.TOKEN_PREFIX+returnToken
                 this.id = user.id
             }
 

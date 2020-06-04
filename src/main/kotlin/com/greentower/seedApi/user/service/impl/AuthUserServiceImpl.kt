@@ -1,14 +1,14 @@
 package com.greentower.seedApi.user.service.impl
 
 import com.greentower.seedApi.infrastructure.generic.GenericServiceImpl
+import com.greentower.seedApi.infrastructure.security.CustomAuthUser
 import com.greentower.seedApi.infrastructure.util.exception.ResponseStatusExceptionToLocate
 import com.greentower.seedApi.user.domain.entity.AuthUser
-import com.greentower.seedApi.user.domain.enum.UserRole
 import com.greentower.seedApi.user.domain.repository.AuthUserRepository
 import com.greentower.seedApi.user.service.AuthUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -60,13 +60,11 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
 
     override fun updatePassword(username: String, oldPassword : String, newPassword: String): AuthUser{
 
-        val authUserFromDBorder = findByUserName(username)
+        val authUserFromDB = findByUserName(username)
 
-        if (passwordEncoder.matches(authUserFromDBorder.password, passwordEncoder.encode(oldPassword))){
-
-            authUserFromDBorder.password = passwordEncoder.encode(newPassword)
-
-            return repository.save(authUserFromDBorder)
+        if (passwordEncoder.matches(authUserFromDB.password, passwordEncoder.encode(oldPassword))){
+            authUserFromDB.password = passwordEncoder.encode(newPassword)
+            return repository.save(authUserFromDB)
         }else{
             throw  getResponsePasswordNotMatches()
         }
@@ -74,21 +72,8 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(userName: String): UserDetails {
-
         val authUser = findByUserName(userName)
-
-        val roles = if( authUser.role == UserRole.ADMIN){
-            arrayOf(UserRole.ADMIN.toString(), UserRole.USER.toString())
-        }else{
-            arrayOf(UserRole.USER.toString())
-        }
-
-        return User
-                .builder()
-                .username(authUser.username)
-                .password(authUser.password)
-                .roles(*roles)
-                .build()
+        return CustomAuthUser(authUser.id, authUser.username, authUser.password, AuthorityUtils.createAuthorityList("ROLE_"+authUser.role.toString()))
     }
 
     override fun findByUserName(userName: String): AuthUser {

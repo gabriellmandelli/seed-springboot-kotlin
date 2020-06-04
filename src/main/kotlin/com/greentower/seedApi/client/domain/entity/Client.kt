@@ -1,8 +1,8 @@
 package com.greentower.seedApi.client.domain.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.greentower.seedApi.client.domain.enum.ClientStatus
 import com.greentower.seedApi.infrastructure.generic.GenericEntity
+import com.greentower.seedApi.infrastructure.util.AuthUserUtil
 import com.greentower.seedApi.user.domain.entity.AuthUser
 import javax.persistence.*
 import javax.validation.constraints.Email
@@ -35,5 +35,5 @@ class Client : GenericEntity() {
 
     @ManyToOne
     @JoinColumn(name = "auth_user")
-    var user : AuthUser? = null
+    var user : AuthUser = AuthUserUtil.getCurrentAuthUser()
 }
