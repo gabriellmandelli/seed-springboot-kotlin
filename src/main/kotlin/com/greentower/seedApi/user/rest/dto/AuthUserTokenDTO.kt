@@ -4,6 +4,5 @@ import java.util.*
 
 class AuthUserTokenDTO {
     var id : UUID? = null
-    var username = ""
     var token = ""
 }

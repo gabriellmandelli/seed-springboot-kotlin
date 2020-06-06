@@ -6,6 +6,7 @@ import com.greentower.seedApi.user.rest.dto.AuthUserCredentialDTO
 import com.greentower.seedApi.user.rest.dto.AuthUserTokenDTO
 import com.greentower.seedApi.user.service.AuthUserService
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -18,8 +19,8 @@ import org.springframework.web.server.ResponseStatusException
 class AutheticationController(private var serviceAuthUser : AuthUserService, private var jwtTokenProvider: JwtTokenProvider) {
 
     @PostMapping("/user")
-    fun authentication(@RequestBody credentialDTOAuth: AuthUserCredentialDTO) : AuthUserTokenDTO? {
-        return try {
+    fun authentication(@RequestBody credentialDTOAuth: AuthUserCredentialDTO) : ResponseEntity<AuthUserTokenDTO> {
+        try {
             val authUser: AuthUser = AuthUser().apply {
                 username = credentialDTOAuth.username
                 password = credentialDTOAuth.password
@@ -27,13 +28,11 @@ class AutheticationController(private var serviceAuthUser : AuthUserService, pri
 
             val userDetails = serviceAuthUser.authenticate(authUser)
             val returnToken = jwtTokenProvider.generateTokenByUser(userDetails)
-            val user = serviceAuthUser.findByUserName(authUser.username)
 
-            AuthUserTokenDTO().apply {
-                this.username = userDetails.username
-                this.token = jwtTokenProvider.TOKEN_PREFIX+returnToken
-                this.id = user.id
-            }
+            return ResponseEntity.ok(AuthUserTokenDTO().apply {
+                this.token = jwtTokenProvider.TOKEN_PREFIX.plus(returnToken)
+                this.id = userDetails.id
+            })
 
         } catch ( e : UsernameNotFoundException) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, e.message)

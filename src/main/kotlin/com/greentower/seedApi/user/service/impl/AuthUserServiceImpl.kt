@@ -9,7 +9,6 @@ import com.greentower.seedApi.user.service.AuthUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.authority.AuthorityUtils
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -71,7 +70,7 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
     }
 
     @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(userName: String): UserDetails {
+    override fun loadUserByUsername(userName: String): CustomAuthUser {
         val authUser = findByUserName(userName)
         return CustomAuthUser(authUser.id, authUser.username, authUser.password, AuthorityUtils.createAuthorityList("ROLE_"+authUser.role.toString()))
     }
@@ -81,7 +80,7 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
                 .orElseThrow{ getResponseNotFound() }
     }
 
-    override fun authenticate(authUser: AuthUser): UserDetails {
+    override fun authenticate(authUser: AuthUser): CustomAuthUser {
         val userDetails = loadUserByUsername(authUser.username)
 
         if (passwordEncoder.matches(authUser.password, userDetails.password)){

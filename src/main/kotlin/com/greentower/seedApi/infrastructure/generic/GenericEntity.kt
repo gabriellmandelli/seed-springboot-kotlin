@@ -1,9 +1,7 @@
 package com.greentower.seedApi.infrastructure.generic
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Type
-import org.hibernate.annotations.UpdateTimestamp
+import org.hibernate.annotations.*
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -33,4 +31,8 @@ abstract class GenericEntity: GenericClass {
     @JsonIgnore
     var updateAt: LocalDateTime? = null
 
+    @Column(name = "sequential", columnDefinition="serial")
+    @Generated(GenerationTime.INSERT)
+    @JsonIgnore
+    var sequential = 0
 }
