@@ -44,6 +44,7 @@ Autor
 -----
 | [<img src="https://avatars0.githubusercontent.com/u/13468664?v=3&s=115"><br><sub>@gabriellmandelli</sub>](https://github.com/gabriellmandelli) |
 | :---: |
+
 License
 ------
-[MIT](LICENSE) &copy; [GreenTower - Solutions](https://github.com/gabriellmandelli)
+[MIT](LICENSE) &copy; [GreenTower - Solutions](https://github.com/GreenTowerSolution)
