@@ -1,9 +1,11 @@
 package com.greentower.seedApi.infrastructure.security.jwt
 
 import com.greentower.seedApi.user.service.AuthUserService
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.SignatureException
 import org.springframework.http.HttpHeaders
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.authentication.WebAuthenticationDetails
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -18,16 +20,32 @@ class JwtAuthenticationFilter(private var authUserService: AuthUserService, priv
         val authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION)
 
         if (authorizationHeader != null && authorizationHeader.startsWith(jwtTokenProvider.TOKEN_PREFIX)) {
-            val token = authorizationHeader.split(" ").toTypedArray()[1]
+            val authToken = authorizationHeader.replace(jwtTokenProvider.TOKEN_PREFIX, "")
 
-            if (jwtTokenProvider.isValidToken(token)) {
-                val authUser = authUserService.loadUserByUsername(jwtTokenProvider.getUsernameFromToken(token))
-                val credentials = UsernamePasswordAuthenticationToken(authUser, null, authUser.authorities)
-                credentials.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = credentials
-            }
+            this.checkToken(authToken, WebAuthenticationDetailsSource().buildDetails(request))
         }
         filterChain.doFilter(request, response)
+    }
+
+    private fun checkToken(authToken: String, authDetails: WebAuthenticationDetails){
+        try {
+            val username = jwtTokenProvider.getUsernameFromToken(authToken)
+
+            if (username.isPresent && SecurityContextHolder.getContext().authentication == null){
+                val customAuthUser = authUserService.loadUserByUsername(username.get())
+                if (jwtTokenProvider.validateToken(authToken, customAuthUser)){
+                    val authentication = jwtTokenProvider.getAuthentication(authToken, customAuthUser)
+                    authentication.details = authDetails
+                    SecurityContextHolder.getContext().authentication = authentication
+                }
+            }
+        } catch (exception : IllegalArgumentException){
+            logger.error("An error occurred during while getting username from token.", exception)
+        } catch (exception : ExpiredJwtException){
+            logger.warn("The token is expired and not valid anymore.")
+        } catch (exception : SignatureException){
+            logger.error("Authentication Failed. Username or Password not valid.", exception)
+        }
     }
 }
 

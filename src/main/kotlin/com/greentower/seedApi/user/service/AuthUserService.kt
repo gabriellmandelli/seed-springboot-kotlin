@@ -22,7 +22,7 @@ interface AuthUserService : UserDetailsService, GenericService<AuthUser> {
 
     override fun deleteAll()
 
-    fun findByUserName(userName: String) : AuthUser
+     fun findByUserName(userName: String) : Optional<AuthUser>
 
     fun authenticate(authUser: AuthUser) : CustomAuthUser
 

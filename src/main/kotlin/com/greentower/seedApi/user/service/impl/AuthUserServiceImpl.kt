@@ -2,12 +2,11 @@ package com.greentower.seedApi.user.service.impl
 
 import com.greentower.seedApi.infrastructure.generic.GenericServiceImpl
 import com.greentower.seedApi.infrastructure.security.CustomAuthUser
-import com.greentower.seedApi.infrastructure.util.exception.ResponseStatusExceptionToLocate
 import com.greentower.seedApi.user.domain.entity.AuthUser
+import com.greentower.seedApi.user.domain.exception.AuthUserResponseStatusMessage
 import com.greentower.seedApi.user.domain.repository.AuthUserRepository
 import com.greentower.seedApi.user.service.AuthUserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -30,14 +29,6 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
         repository = repositoryAuthUser
     }
 
-    private fun getResponseNotFound() : ResponseStatusExceptionToLocate{
-        return ResponseStatusExceptionToLocate(HttpStatus.NOT_FOUND, "entity.auth_user.not_found")
-    }
-
-    private fun getResponsePasswordNotMatches() : ResponseStatusExceptionToLocate{
-        return ResponseStatusExceptionToLocate(HttpStatus.UNAUTHORIZED, "entity.auth_user.password_not_matches")
-    }
-
     override fun save(entity: AuthUser): AuthUser {
         entity.password = passwordEncoder.encode(entity.password)
         return repository.save(entity)
@@ -51,7 +42,7 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
             entity.id = authUserFromDb.get().id
             entity.password = authUserFromDb.get().password
         }else{
-            throw getResponseNotFound()
+            throw AuthUserResponseStatusMessage.getResponseNotFound()
         }
 
         return repository.save(entity)
@@ -59,25 +50,25 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
 
     override fun updatePassword(username: String, oldPassword : String, newPassword: String): AuthUser{
 
-        val authUserFromDB = findByUserName(username)
+        val authUserFromDB = findByUserName(username).orElseThrow{ AuthUserResponseStatusMessage.getResponseNotFound() }
 
         if (passwordEncoder.matches(authUserFromDB.password, passwordEncoder.encode(oldPassword))){
             authUserFromDB.password = passwordEncoder.encode(newPassword)
-            return repository.save(authUserFromDB)
         }else{
-            throw  getResponsePasswordNotMatches()
+            throw AuthUserResponseStatusMessage.getResponsePasswordNotMatches()
         }
+
+        return repository.save(authUserFromDB)
     }
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(userName: String): CustomAuthUser {
-        val authUser = findByUserName(userName)
+        val authUser = findByUserName(userName).orElseThrow{ AuthUserResponseStatusMessage.getResponseNotFound() }
         return CustomAuthUser(authUser.id, authUser.username, authUser.password, AuthorityUtils.createAuthorityList("ROLE_"+authUser.role.toString()))
     }
 
-    override fun findByUserName(userName: String): AuthUser {
+    override fun findByUserName(userName: String): Optional<AuthUser> {
         return repositoryAuthUser.findByusername(userName)
-                .orElseThrow{ getResponseNotFound() }
     }
 
     override fun authenticate(authUser: AuthUser): CustomAuthUser {
@@ -86,7 +77,7 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
         if (passwordEncoder.matches(authUser.password, userDetails.password)){
             return userDetails
         }else{
-            throw  getResponsePasswordNotMatches()
+            throw  AuthUserResponseStatusMessage.getResponsePasswordNotMatches()
         }
     }
 }
