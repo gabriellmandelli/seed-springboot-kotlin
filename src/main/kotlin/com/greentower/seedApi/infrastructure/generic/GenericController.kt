@@ -1,16 +1,19 @@
 package com.greentower.seedApi.infrastructure.generic
 
+import com.greentower.seedApi.infrastructure.util.exception.ResponseStatusExceptionToLocate
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 abstract class GenericController<T: GenericClass> {
 
     protected lateinit var service : GenericService<T>
-    protected abstract var messageNotFound : String
+
+    open fun getResponseNotFound() : ResponseStatusExceptionToLocate{
+        return ResponseStatusExceptionToLocate(HttpStatus.NOT_FOUND, "default.not_found")
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -28,7 +31,7 @@ abstract class GenericController<T: GenericClass> {
     open fun findById(@PathVariable("id") id : UUID) : ResponseEntity<T> {
         return service.findById(id)
                 .map { entity -> ResponseEntity.ok(entity) }
-                .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, messageNotFound) }
+                .orElseThrow { getResponseNotFound() }
     }
 
     @GetMapping

@@ -1,7 +1,9 @@
 package com.greentower.seedApi.user.rest.controller
 
 import com.greentower.seedApi.infrastructure.generic.GenericController
+import com.greentower.seedApi.infrastructure.util.exception.ResponseStatusExceptionToLocate
 import com.greentower.seedApi.user.domain.entity.AuthUser
+import com.greentower.seedApi.user.domain.exception.AuthUserResponseStatusMessage
 import com.greentower.seedApi.user.rest.dto.AuthUserUpdatePasswordDTO
 import com.greentower.seedApi.user.service.AuthUserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,14 +17,16 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/user")
 class AuthUserController: GenericController<AuthUser>() {
 
-    override var messageNotFound = "User not found"
-
     @Autowired
     lateinit var serviceAuthUser: AuthUserService
 
     @Autowired
     fun setService(){
         this.service = serviceAuthUser
+    }
+
+    override fun getResponseNotFound(): ResponseStatusExceptionToLocate {
+        return AuthUserResponseStatusMessage.getResponseNotFound()
     }
 
     @PutMapping("/password")

@@ -23,8 +23,14 @@ class InternationalizationConfig : AcceptHeaderLocaleResolver(), WebMvcConfigure
 
     @Bean
     fun messageSource() : ResourceBundleMessageSource {
+
+        val messagesModules : Array<String> = arrayOf(
+                "messages/messages_default",
+                "messages/messages_auth_user",
+                "messages/messages_client")
+
         val resourceSource = ResourceBundleMessageSource()
-        resourceSource.setBasename("messages")
+        resourceSource.setBasenames(*messagesModules)
         resourceSource.setDefaultEncoding(Charsets.ISO_8859_1.name())
         resourceSource.setUseCodeAsDefaultMessage(true)
         return resourceSource
