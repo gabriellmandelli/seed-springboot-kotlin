@@ -11,10 +11,6 @@ class AuthUserResponseStatusMessage{
             return ResponseStatusExceptionToLocate(HttpStatus.NOT_FOUND, "entity.auth_user.not_found")
         }
 
-        fun getResponseUnauthorized() : ResponseStatusExceptionToLocate{
-            return ResponseStatusExceptionToLocate(HttpStatus.UNAUTHORIZED, "entity.auth_user.password_not_matches")
-        }
-
         fun getResponsePasswordNotMatches() : ResponseStatusExceptionToLocate{
             return ResponseStatusExceptionToLocate(HttpStatus.UNAUTHORIZED, "entity.auth_user.password_not_matches")
         }

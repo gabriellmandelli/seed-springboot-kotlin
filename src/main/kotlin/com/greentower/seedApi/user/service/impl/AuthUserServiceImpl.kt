@@ -19,10 +19,10 @@ import javax.transaction.Transactional
 class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
 
     @Autowired
-    lateinit var repositoryAuthUser: AuthUserRepository<AuthUser>
+    private lateinit var repositoryAuthUser: AuthUserRepository<AuthUser>
 
     @Autowired
-    lateinit var passwordEncoder : PasswordEncoder
+    private lateinit var passwordEncoder: PasswordEncoder
 
     @Autowired
     fun setService(){
@@ -40,6 +40,7 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
 
         if (authUserFromDb.isPresent){
             entity.id = authUserFromDb.get().id
+            entity.username = authUserFromDb.get().username
             entity.password = authUserFromDb.get().password
         }else{
             throw AuthUserResponseStatusMessage.getResponseNotFound()
@@ -50,20 +51,24 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
 
     override fun updatePassword(username: String, oldPassword : String, newPassword: String): AuthUser{
 
-        val authUserFromDB = findByUserName(username).orElseThrow{ AuthUserResponseStatusMessage.getResponseNotFound() }
+        val authUserFromDB = findByUserName(username)
 
-        if (passwordEncoder.matches(authUserFromDB.password, passwordEncoder.encode(oldPassword))){
-            authUserFromDB.password = passwordEncoder.encode(newPassword)
-        }else{
-            throw AuthUserResponseStatusMessage.getResponsePasswordNotMatches()
+        if (authUserFromDB.isPresent){
+            if (passwordEncoder.matches(oldPassword, authUserFromDB.get().password)){
+                authUserFromDB.get().password = passwordEncoder.encode(newPassword)
+            }else{
+                throw AuthUserResponseStatusMessage.getResponsePasswordNotMatches()
+            }
+        } else {
+            throw AuthUserResponseStatusMessage.getResponseNotFound()
         }
 
-        return repository.save(authUserFromDB)
+        return repository.save(authUserFromDB.get())
     }
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(userName: String): CustomAuthUser {
-        val authUser = findByUserName(userName).orElseThrow{ AuthUserResponseStatusMessage.getResponseNotFound() }
+        val authUser = findByUserName(userName).orElseThrow{ AuthUserResponseStatusMessage.getResponsePasswordNotMatches() }
         return CustomAuthUser(authUser.id, authUser.username, authUser.password, AuthorityUtils.createAuthorityList("ROLE_"+authUser.role.toString()))
     }
 
@@ -72,10 +77,10 @@ class AuthUserServiceImpl : AuthUserService, GenericServiceImpl<AuthUser>() {
     }
 
     override fun authenticate(authUser: AuthUser): CustomAuthUser {
-        val userDetails = loadUserByUsername(authUser.username)
+        val customAuthUser = loadUserByUsername(authUser.username)
 
-        if (passwordEncoder.matches(authUser.password, userDetails.password)){
-            return userDetails
+        if (passwordEncoder.matches(authUser.password, customAuthUser.password)){
+            return customAuthUser
         }else{
             throw  AuthUserResponseStatusMessage.getResponsePasswordNotMatches()
         }

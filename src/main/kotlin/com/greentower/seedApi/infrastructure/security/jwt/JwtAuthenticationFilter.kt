@@ -3,6 +3,7 @@ package com.greentower.seedApi.infrastructure.security.jwt
 import com.greentower.seedApi.user.service.AuthUserService
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.SignatureException
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetails
@@ -14,15 +15,23 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class JwtAuthenticationFilter(private var authUserService: AuthUserService, private var jwtTokenProvider: JwtTokenProvider) : OncePerRequestFilter() {
+class JwtAuthenticationFilter : OncePerRequestFilter() {
+
+    @Autowired
+    private lateinit var authUserService: AuthUserService
+
+    @Autowired
+    private lateinit var jwtTokenProvider: JwtTokenProvider
+
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
 
         val authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION)
 
         if (authorizationHeader != null && authorizationHeader.startsWith(jwtTokenProvider.TOKEN_PREFIX)) {
             val authToken = authorizationHeader.replace(jwtTokenProvider.TOKEN_PREFIX, "")
-
             this.checkToken(authToken, WebAuthenticationDetailsSource().buildDetails(request))
+        } else {
+            logger.error("Couldn't find bearer prefix. Header will be ignore.")
         }
         filterChain.doFilter(request, response)
     }

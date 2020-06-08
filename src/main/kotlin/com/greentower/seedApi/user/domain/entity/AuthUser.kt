@@ -13,19 +13,19 @@ import javax.validation.constraints.Size
 @Table(name = "auth_user")
 class AuthUser : GenericEntity() {
 
-    @Size(min = 1, max = 255, message = "Field name need be 1 between 255 carcters")
+    @Size(min = 1, max = 255, message = "Field name need be 1 between 255 caracters")
     @NotEmpty(message = "Field name is not empty")
     @NotNull(message = "Field name is not null")
     @Column(name = "name")
     var name = ""
 
-    @Size(min = 1, max = 10, message = "Field username need be 1 between 10 carcters")
+    @Size(min = 5, max = 15, message = "Field username need be 1 between 10 caracters")
     @NotEmpty(message = "Field username is not empty")
     @NotNull(message = "Field username is not null")
     @Column(name = "username", unique = true)
     var username = ""
 
-    @Size(min = 8, message = "Field password need be 8 carcters")
+    @Size(min = 8, message = "Field password need be 8 caracters")
     @NotEmpty(message = "Field password is not empty")
     @NotNull(message = "Field password is not null")
     @Column(name = "password")
