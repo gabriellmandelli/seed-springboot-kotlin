@@ -1,7 +1,7 @@
 package com.greentower.seedApi.infrastructure.util
 
 import com.greentower.seedApi.infrastructure.security.CustomAuthUser
-import com.greentower.seedApi.user.domain.entity.AuthUser
+import com.greentower.seedApi.main.auth_user.domain.entity.AuthUser
 import org.springframework.security.core.context.SecurityContextHolder
 
 class AuthUserUtil{

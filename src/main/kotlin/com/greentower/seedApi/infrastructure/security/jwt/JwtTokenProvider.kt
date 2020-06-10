@@ -22,7 +22,7 @@ class JwtTokenProvider() {
 
     val TOKEN_PREFIX = "Bearer "
 
-    fun generateTokenByUser(customAuthUser: CustomAuthUser) : String {
+    private fun generateTokenByUser(customAuthUser: CustomAuthUser) : String {
         val expirationDate : Date = Date.from(LocalDateTime.now().plusMinutes(jwtConfig.expirationTimeMinutes.toLong()).atZone(ZoneId.systemDefault()).toInstant())
 
         return Jwts.builder()
@@ -34,29 +34,19 @@ class JwtTokenProvider() {
                 .compact()
     }
 
-    fun generateTokenByUserWithPrefix(customAuthUser: CustomAuthUser) : String{
-        return TOKEN_PREFIX.plus(this.generateTokenByUser(customAuthUser))
-    }
-
-    fun getAllClaimsFromToken(token: String): Claims {
+    private fun getAllClaimsFromToken(token: String): Claims {
         return Jwts.parser()
                 .setSigningKey(jwtConfig.signingKey)
                 .parseClaimsJws(token)
                 .body
     }
 
-    fun isTokenExpired(authToken : String) : Boolean {
+    private fun isTokenExpired(authToken : String) : Boolean {
         return try {
             LocalDateTime.now().isAfter(getAllClaimsFromToken(authToken).expiration.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
         }catch (exception : Exception){
             true
         }
-    }
-
-    fun validateToken(authToken: String, customAuthUser : CustomAuthUser) : Boolean{
-        return this.getUsernameFromToken(authToken)
-                .map { username -> username.equals(customAuthUser.username) &&  !isTokenExpired(authToken)}
-                .orElse(false)
     }
 
     fun getUsernameFromToken(token: String) : Optional<String> {
@@ -65,5 +55,15 @@ class JwtTokenProvider() {
 
     fun getAuthentication(authToken : String, customAuthUser : CustomAuthUser) : UsernamePasswordAuthenticationToken{
         return UsernamePasswordAuthenticationToken(customAuthUser, "", customAuthUser.authorities)
+    }
+
+    fun generateTokenByUserWithPrefix(customAuthUser: CustomAuthUser) : String{
+        return TOKEN_PREFIX.plus(this.generateTokenByUser(customAuthUser))
+    }
+
+    fun validateToken(authToken: String, customAuthUser : CustomAuthUser) : Boolean{
+        return this.getUsernameFromToken(authToken)
+                .map { username -> username.equals(customAuthUser.username) && !isTokenExpired(authToken)}
+                .orElse(false)
     }
 }

@@ -1,6 +1,6 @@
 package com.greentower.seedApi.infrastructure.security.jwt
 
-import com.greentower.seedApi.user.service.AuthUserService
+import com.greentower.seedApi.main.auth_user.service.AuthUserService
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.SignatureException
 import org.springframework.beans.factory.annotation.Autowired

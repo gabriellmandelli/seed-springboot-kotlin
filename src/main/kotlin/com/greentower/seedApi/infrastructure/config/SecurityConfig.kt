@@ -1,8 +1,8 @@
 package com.greentower.seedApi.infrastructure.config
 
 import com.greentower.seedApi.infrastructure.security.jwt.JwtAuthenticationFilter
-import com.greentower.seedApi.user.domain.enum.UserRole
-import com.greentower.seedApi.user.service.AuthUserService
+import com.greentower.seedApi.main.auth_user.domain.enum.UserRole
+import com.greentower.seedApi.main.auth_user.service.AuthUserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
