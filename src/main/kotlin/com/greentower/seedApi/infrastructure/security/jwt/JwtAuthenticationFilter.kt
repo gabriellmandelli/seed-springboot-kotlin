@@ -2,6 +2,7 @@ package com.greentower.seedApi.infrastructure.security.jwt
 
 import com.greentower.seedApi.main.auth_user.service.AuthUserService
 import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
@@ -52,9 +53,10 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             logger.error("An error occurred during while getting username from token.", exception)
         } catch (exception : ExpiredJwtException){
             logger.warn("The token is expired and not valid anymore.")
+        } catch (exception : MalformedJwtException){
+            logger.error("Authentication Failed. Unable to read JSON value.", exception)
         } catch (exception : SignatureException){
             logger.error("Authentication Failed. Username or Password not valid.", exception)
         }
     }
 }
-
