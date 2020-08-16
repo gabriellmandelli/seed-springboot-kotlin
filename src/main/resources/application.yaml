@@ -1,4 +1,26 @@
 
+server:
+  port: 8080
+  servlet:
+    context-path: /seed-api
+
+security:
+  jwt:
+    expiration-time-minutes: 30
+    signing-key: YSBsZW1icmUgw6kgYnJhbmNh
+
 spring:
   profiles:
     active: dev
+
+  jpa:
+    show-sql: true
+    open-in-view: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  thymeleaf:
+    cache: false

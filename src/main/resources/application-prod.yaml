@@ -1,28 +1,6 @@
 
-server:
-  port: 8080
-  servlet:
-    context-path: /seed-api
-
 spring:
   datasource:
     url: jdbc:postgresql://ec2-35-171-31-33.compute-1.amazonaws.com:5432/ddrc08p8m7oaff
     username: ndivlurplvrraf
     password: 0dbe7dec6be37966cf6366a3596c86623483bde30dec3123e13df898d55d8eda
-
-  jpa:
-    show-sql: true
-    open-in-view: true
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
-  thymeleaf:
-    cache: false
-
-security:
-  jwt:
-    expiration-time-minutes: 30
-    signing-key: YSBsZW1icmUgw6kgYnJhbmNh
