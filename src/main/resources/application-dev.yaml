@@ -1,6 +1,6 @@
 
 spring:
   datasource:
-    url: jdbc:postgresql://ec2-34-234-228-127.compute-1.amazonaws.com:5432/defechh51m1rg9
-    username: ncswoykyvpmvji
-    password: c2ff5d43d69c6f40cc7638298e40df4c69fce72fb0a3454a659013569754b9dc
+    url: jdbc:postgresql://ec2-35-153-12-59.compute-1.amazonaws.com:5432/d1kv0092bn6ign
+    username: qiijnsoaszcmeg
+    password: 639d6b87bc3494a725cc5537b8fe23d4be996f58e3fcf7616a99f691c7eae07c
